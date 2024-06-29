@@ -26,3 +26,4 @@ FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`
 GROUP BY 1
 ORDER BY 2 DESC ;
 ```
+<img width="800" alt="Screenshot_7" src="https://github.com/TAQUOCANH/SQL_E-Commerce_Dataset/assets/135592751/30f98362-1370-4cdd-965d-a9b0e9656ef6">
