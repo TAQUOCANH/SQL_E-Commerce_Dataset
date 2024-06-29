@@ -258,7 +258,7 @@ ORDER BY month ;
 
 ```
 
-| Month  | Avg Pageviews Purchase | Avg Pageviews Non-Purchase |
+| month  | avg_pageviews_purchase | avg_pageviews_non_purchase |
 |--------|-------------------------|----------------------------|
 | 201706 | 94.02050113895217       | 316.86558846341671         |
 | 201707 | 124.23755186721992      | 334.05655979568053         |
@@ -280,7 +280,7 @@ where _table_suffix between '0701' and '0731' and totals.transactions >=1 and pr
 GROUP BY 1;
 ```
 
-| Month  | Avg Total Transactions per User |
+| month  | avg_total_transactions_per_user |
 |--------|---------------------------------|
 | 201707 | 4.16390041493776                |
 
@@ -292,7 +292,7 @@ GROUP BY 1;
 ```sql
 SELECT
         FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d",date)) month
-        ,SUM(product.productRevenue) /  (COUNT (visitId) *1000000.0) avg_total_transactions_per_user
+        ,SUM(product.productRevenue) /  (COUNT (visitId) *1000000.0) avg_revenue_by_user_per_visit
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*` ,
 UNNEST (hits) hits,
 UNNEST (hits.product) product
@@ -300,9 +300,153 @@ where _table_suffix between '0701' and '0731' and totals.transactions >=1 and pr
 GROUP BY 1 ;
 ```
 
-| Month  | Avg Total Transactions per User |
+| month  | avg_revenue_by_user_per_visit |
 |--------|---------------------------------|
 | 201707 | 43.856598348051243              |
 
 
-<p>In July 2017, each user made an average of approximately 43.86 transactions, indicating a very high level of purchasing activity per user during this month</p> 
+<p>July 2017 had an average revenue per user per visit of 43.86.</p> 
+<p>This insight can help the business evaluate and optimize marketing strategies to enhance engagement and conversion rates, turning visits into revenue more effectively.</p>
+
+### Query 07: Other products purchased by customers who purchased product "YouTube Men's Vintage Henley" in July 2017. Output should show product name and the quantity was ordered.
+
+```sql
+SELECT 
+    product.v2ProductName AS other_purchased_products,
+    SUM(product.productQuantity) AS quantity
+FROM 
+    `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
+    UNNEST(hits) AS hits,
+    UNNEST(hits.product) AS product
+WHERE 
+    _table_suffix BETWEEN '0701' AND '0731'
+    AND product.productRevenue IS NOT NULL
+    AND product.v2ProductName != "YouTube Men's Vintage Henley"
+    AND fullVisitorId IN (
+        SELECT DISTINCT fullVisitorId
+        FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
+        UNNEST(hits) AS hits,
+        UNNEST(hits.product) AS product
+        WHERE 
+            _table_suffix BETWEEN '0701' AND '0731'
+            AND product.v2ProductName = "YouTube Men's Vintage Henley"
+            AND product.productRevenue IS NOT NULL
+    )
+GROUP BY 1
+ORDER BY 2 DESC ;
+```
+### Table
+
+| other_purchased_products                           | quantity |
+|----------------------------------------------------|----------|
+| Google Sunglasses                                  | 20       |
+| Google Women's Vintage Hero Tee Black              | 7        |
+| SPF-15 Slim & Slender Lip Balm                     | 6        |
+| Google Women's Short Sleeve Hero Tee Red Heather   | 4        |
+| YouTube Men's Fleece Hoodie Black                  | 3        |
+| Google Men's Short Sleeve Badge Tee Charcoal       | 3        |
+| 22 oz YouTube Bottle Infuser                       | 2        |
+| Android Men's Vintage Henley                       | 2        |
+| YouTube Twill Cap                                  | 2        |
+| Google Men's Short Sleeve Hero Tee Charcoal        | 2        |
+| Red Shine 15 oz Mug                                | 2        |
+| Google Doodle Decal                                | 2        |
+| Recycled Mouse Pad                                 | 2        |
+| Android Women's Fleece Hoodie                      | 2        |
+| Android Wool Heather Cap Heather/Black             | 2        |
+| Crunch Noise Dog Toy                               | 2        |
+| Google Men's Vintage Badge Tee White               | 1        |
+| Google Slim Utility Travel Bag                     | 1        |
+| YouTube Women's Short Sleeve Hero Tee Charcoal     | 1        |
+| Google Men's Performance Full Zip Jacket Black     | 1        |
+| 26 oz Double Wall Insulated Bottle                 | 1        |
+| Android Men's Short Sleeve Hero Tee White          | 1        |
+| Android Men's Pep Rally Short Sleeve Tee Navy      | 1        |
+| YouTube Men's Short Sleeve Hero Tee Black          | 1        |
+| Google Men's Pullover Hoodie Grey                  | 1        |
+| YouTube Men's Short Sleeve Hero Tee White          | 1        |
+| Google Men's 100% Cotton Short Sleeve Hero Tee Red | 1        |
+| Android Men's Vintage Tank                         | 1        |
+| Google Men's Zip Hoodie                            | 1        |
+| Google Twill Cap                                   | 1        |
+| Google Men's Long & Lean Tee Grey                  | 1        |
+| Google Men's Long Sleeve Raglan Ocean Blue         | 1        |
+| YouTube Custom Decals                              | 1        |
+| Four Color Retractable Pen                         | 1        |
+| Google Laptop and Cell Phone Stickers              | 1        |
+| Google Men's Vintage Badge Tee Black               | 1        |
+| Google Men's Long & Lean Tee Charcoal              | 1        |
+| Google Men's Bike Short Sleeve Tee Charcoal        | 1        |
+| Google 5-Panel Cap                                 | 1        |
+| Google Toddler Short Sleeve T-shirt Grey           | 1        |
+| Android Sticker Sheet Ultra Removable              | 1        |
+| Google Men's Performance 1/4 Zip Pullover Heather/Black | 1   |
+| YouTube Hard Cover Journal                         | 1        |
+| Android BTTF Moonshot Graphic Tee                  | 1        |
+| Google Men's Airflow 1/4 Zip Pullover Black        | 1        |
+| Android Men's Short Sleeve Hero Tee Heather        | 1        |
+| YouTube Women's Short Sleeve Tri-blend Badge Tee Charcoal | 1  |
+| YouTube Men's Long & Lean Tee Charcoal             | 1        |
+| Google Women's Long Sleeve Tee Lavender            | 1        |
+| 8 pc Android Sticker Sheet                         | 1        |
+
+
+<p>**Google Sunglasses** was the most frequently purchased product, with a quantity of **20**.</p> 
+<p>**Google Women's Vintage Hero Tee Black** and **SPF-15 Slim & Slender Lip Balm** were also popular, with quantities of **7** and **6** respectively.</p>
+<p>Various other products were purchased in smaller quantities, ranging from **4** to **1** units.</p>
+<p>This suggests that customers who bought the **YouTube Men's Vintage Henley** in July 2017 also showed a diverse interest in other Google and YouTube merchandise, indicating potential cross-selling opportunities.</p>
+
+### Query 08: Calculate cohort map from product view to addtocart to purchase in Jan, Feb and March 2017. For example, 100% product view then 40% add_to_cart and 10% purchase. Add_to_cart_rate = number product  add to cart/number product view. Purchase_rate = number product purchase/number product view. The output should be calculated in product level.
+```sql
+WITH product_data AS(
+SELECT
+        FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d",date)) month
+        ,COUNT(CASE WHEN eCommerceAction.action_type = '2' THEN product.v2ProductName END) num_product_view
+        ,COUNT(CASE WHEN eCommerceAction.action_type = '3' THEN product.v2ProductName END) num_add_to_cart
+        ,COUNT(CASE WHEN eCommerceAction.action_type = '6' AND product.productRevenue IS NOT NULL THEN product.v2ProductName END) num_purchase
+        
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*` ,
+UNNEST (hits) hits,
+UNNEST (hits.product) product
+where _table_suffix between '0101' and '1231' AND eCommerceAction.action_type in ('2','3','6')
+GROUP BY 1
+ORDER BY 1
+)
+
+SELECT
+    *,
+    ROUND(num_add_to_cart/num_product_view * 100, 2)  add_to_cart_rate,
+    ROUND(num_purchase/num_product_view * 100, 2)  purchase_rate
+FROM product_data;
+```
+
+| month  | num_product_view | num_add_to_cart | num_purchase | add_to_cart_rate | purchase_rate |
+|--------|-------------------|-----------------|--------------|------------------|---------------|
+| 201701 | 25787             | 7342            | 2143         | 28.47            | 8.31          |
+| 201702 | 21489             | 7360            | 2060         | 34.25            | 9.59          |
+| 201703 | 23549             | 8782            | 2977         | 37.29            | 12.64         |
+| 201704 | 24587             | 10291           | 2906         | 41.86            | 11.82         |
+| 201705 | 25469             | 10083           | 3285         | 39.59            | 12.90         |
+| 201706 | 22148             | 9020            | 2785         | 40.73            | 12.57         |
+| 201707 | 28576             | 11860           | 3669         | 41.50            | 12.84         |
+| 201708 | 1267              | 494             | 186          | 38.99            | 14.68         |
+
+**Insights:**
+
+1. **Product Views Trend:**
+   - Product views fluctuate month to month with the highest in July 2017 (28576) and the lowest in August 2017 (1267).
+
+2. **Add to Cart Trend:**
+   - The number of products added to cart generally increased from January to July, peaking in July 2017 (11860), before dropping sharply in August 2017 (494).
+
+3. **Purchases Trend:**
+   - The number of purchases follows a similar trend to product views and add to cart numbers, peaking in July 2017 (3669) and dropping significantly in August 2017 (186).
+
+4. **Conversion Rates:**
+   - The add to cart rate shows a steady increase from January to July, with the highest rate in April 2017 (41.86%).
+   - The purchase rate also increases over time, with the highest rate observed in August 2017 (14.68%). This might be due to a significantly lower number of product views in August.
+
+5. **August 2017 Anomaly:**
+   - There is a significant drop in all metrics in August 2017. This could indicate an issue during this period such as a data collection error, website downtime, or other external factors affecting user activity.
+
+If you have any specific questions or need further analysis, feel free to ask!
