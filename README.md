@@ -287,3 +287,22 @@ GROUP BY 1;
 
 <p>In July 2017, each user made an average of approximately 4.16 transactions</p>
 
+### Query 06: Average amount of money spent per session. Only include purchaser data in July 2017
+
+```sql
+SELECT
+        FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d",date)) month
+        ,SUM(product.productRevenue) /  (COUNT (visitId) *1000000.0) avg_total_transactions_per_user
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*` ,
+UNNEST (hits) hits,
+UNNEST (hits.product) product
+where _table_suffix between '0701' and '0731' and totals.transactions >=1 and product.productRevenue IS NOT NULL
+GROUP BY 1 ;
+```
+
+| Month  | Avg Total Transactions per User |
+|--------|---------------------------------|
+| 201707 | 43.856598348051243              |
+
+
+<p>In July 2017, each user made an average of approximately 43.86 transactions, indicating a very high level of purchasing activity per user during this month</p> 
