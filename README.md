@@ -391,10 +391,10 @@ ORDER BY 2 DESC ;
 | 8 pc Android Sticker Sheet                         | 1        |
 
 
-<p>**Google Sunglasses** was the most frequently purchased product, with a quantity of **20**.</p> 
-<p>**Google Women's Vintage Hero Tee Black** and **SPF-15 Slim & Slender Lip Balm** were also popular, with quantities of **7** and **6** respectively.</p>
-<p>Various other products were purchased in smaller quantities, ranging from **4** to **1** units.</p>
-<p>This suggests that customers who bought the **YouTube Men's Vintage Henley** in July 2017 also showed a diverse interest in other Google and YouTube merchandise, indicating potential cross-selling opportunities.</p>
+<p>Google Sunglasses was the most frequently purchased product, with a quantity of 20.</p> 
+<p>Google Women's Vintage Hero Tee Black and SPF-15 Slim & Slender Lip Balm were also popular, with quantities of 7 and 6 respectively.</p>
+<p>Various other products were purchased in smaller quantities, ranging from 4 to 1 units.</p>
+<p>This suggests that customers who bought the YouTube Men's Vintage Henley in July 2017 also showed a diverse interest in other Google and YouTube merchandise, indicating potential cross-selling opportunities.</p>
 
 ### Query 08: Calculate cohort map from product view to addtocart to purchase in Jan, Feb and March 2017. For example, 100% product view then 40% add_to_cart and 10% purchase. Add_to_cart_rate = number product  add to cart/number product view. Purchase_rate = number product purchase/number product view. The output should be calculated in product level.
 ```sql
@@ -431,22 +431,4 @@ FROM product_data;
 | 201707 | 28576             | 11860           | 3669         | 41.50            | 12.84         |
 | 201708 | 1267              | 494             | 186          | 38.99            | 14.68         |
 
-**Insights:**
-
-1. **Product Views Trend:**
-   - Product views fluctuate month to month with the highest in July 2017 (28576) and the lowest in August 2017 (1267).
-
-2. **Add to Cart Trend:**
-   - The number of products added to cart generally increased from January to July, peaking in July 2017 (11860), before dropping sharply in August 2017 (494).
-
-3. **Purchases Trend:**
-   - The number of purchases follows a similar trend to product views and add to cart numbers, peaking in July 2017 (3669) and dropping significantly in August 2017 (186).
-
-4. **Conversion Rates:**
-   - The add to cart rate shows a steady increase from January to July, with the highest rate in April 2017 (41.86%).
-   - The purchase rate also increases over time, with the highest rate observed in August 2017 (14.68%). This might be due to a significantly lower number of product views in August.
-
-5. **August 2017 Anomaly:**
-   - There is a significant drop in all metrics in August 2017. This could indicate an issue during this period such as a data collection error, website downtime, or other external factors affecting user activity.
-
-If you have any specific questions or need further analysis, feel free to ask!
+<p> Overall, the data without August 2017 suggests a positive trend in user engagement and conversion rates, with significant increases in product views, items added to the cart, and purchases from January to July 2017. The exclusion of the incomplete data for August ensures the integrity and accuracy of these insights </p>
