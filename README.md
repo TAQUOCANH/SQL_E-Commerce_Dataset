@@ -12,3 +12,4 @@ Query 01: calculate total visit, pageview, transaction for Jan, Feb and March 20
    WHERE _table_suffix BETWEEN '0101' AND '0331'
    GROUP BY month_extract
 ```
+<img width="800" alt="query 1" src="https://github.com/TAQUOCANH/SQL_E-Commerce_Dataset/assets/135592751/5b39e16a-9ac3-48cd-88a0-1748a4bdbcf0">
