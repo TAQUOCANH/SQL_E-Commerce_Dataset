@@ -33,6 +33,7 @@ GROUP BY 1
 ORDER BY 2 DESC ;
 ```
 
+
 | source                           | total_visits | total_no_of_bounces | bounce_rate |
 |----------------------------------|--------------|---------------------|-------------|
 | google                           | 38400        | 19798               | 51.56       |
@@ -224,3 +225,65 @@ Dưới đây là dữ liệu đã được sắp xếp thành bảng:
 | Week      | 201724 | l.facebook.com        | 12.48         |
 
 <p>This table provides an overview of the revenue origins from different channels over periodic time frames. Revenue is primarily driven by direct sources and Google, with smaller but still significant contributions from other sources.</p>
+
+### Query 04: Average number of pageviews by purchaser type (purchasers vs non-purchasers) in June, July 2017.
+
+```sql
+WITH
+avg_pageviews_purchase AS(
+  SELECT
+        FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d",date)) month
+        ,SUM(totals.pageviews) /  COUNT(DISTINCT fullVisitorId) avg_pageviews_purchase
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*` ,
+  UNNEST (hits) hits,
+  UNNEST (hits.product) product
+  where _table_suffix between '0601' and '0731' and totals.transactions >=1 and product.productRevenue IS NOT NULL
+  GROUP BY 1
+)
+, avg_pageviews_non_purchase AS (
+    SELECT
+        FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d",date)) month
+        ,SUM(totals.pageviews) /  COUNT(DISTINCT fullVisitorId) avg_pageviews_non_purchase
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*` ,
+  UNNEST (hits) hits,
+  UNNEST (hits.product) product
+  where _table_suffix between '0601' and '0731' and totals.transactions IS NULL and product.productRevenue IS NULL
+  GROUP BY 1
+)
+
+SELECT * FROM avg_pageviews_purchase
+FULL JOIN avg_pageviews_non_purchase
+USING(month)
+ORDER BY month ;
+
+```
+
+| Month  | Avg Pageviews Purchase | Avg Pageviews Non-Purchase |
+|--------|-------------------------|----------------------------|
+| 201706 | 94.02050113895217       | 316.86558846341671         |
+| 201707 | 124.23755186721992      | 334.05655979568053         |
+
+
+<p> The average pageviews for purchases increased from June to July, indicating that users who made purchases viewed more pages on average in July</p>
+<p>The average pageviews for non-purchases also increased from June to July, suggesting that users who did not make purchases were viewing more pages as well</p>
+
+### Query 05: Average number of transactions per user that made a purchase in July 2017
+
+```sql
+SELECT
+        FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d",date)) month
+        ,SUM(totals.transactions) /  COUNT(DISTINCT fullVisitorId) avg_total_transactions_per_user
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*` ,
+UNNEST (hits) hits,
+UNNEST (hits.product) product
+where _table_suffix between '0701' and '0731' and totals.transactions >=1 and product.productRevenue IS NOT NULL
+GROUP BY 1;
+```
+
+| Month  | Avg Total Transactions per User |
+|--------|---------------------------------|
+| 201707 | 4.16390041493776                |
+
+
+<p>In July 2017, each user made an average of approximately 4.16 transactions</p>
+
