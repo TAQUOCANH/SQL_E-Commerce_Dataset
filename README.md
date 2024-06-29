@@ -2,22 +2,22 @@
 ### Query 01: calculate total visit, pageview, transaction for Jan, Feb and March 2017 (order by month)
 
 ```sql
-SELECT 
-      FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) month_extract
-      ,SUM(totals.visits) visits
-      ,SUM(totals.pageviews) pageviews
-      ,SUM(totals.transactions) transactions
-      ,ROUND(SUM(totals.totalTransactionRevenue)/POW(10,6),2) revenue
+SELECT
+        FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d",date)) month
+        ,SUM(totals.visits) visits
+        ,SUM(totals.pageviews) pageviews
+        ,SUM(totals.transactions) transactions
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`
-WHERE _table_suffix BETWEEN '0101' AND '0331'
-GROUP BY month_extract
+where _table_suffix between '0101' and '0331'
+GROUP BY 1
+ORDER BY 1 ;
 ```
 
-| Row | month  | visits | pageviews | transactions |
-|-----|--------|--------|-----------|--------------|
-| 1   | 201701 | 64694  | 257708    | 713          |
-| 2   | 201702 | 62192  | 233373    | 733          |
-| 3   | 201703 | 69931  | 259522    | 993          |
+| month  | visits | pageviews | transactions |
+|--------|--------|-----------|--------------|
+| 201701 | 64694  | 257708    | 713          |
+| 201702 | 62192  | 233373    | 733          |
+| 201703 | 69931  | 259522    | 993          |
 
 <p>March 2017 shows a significant improvement in all metrics (visits, pageviews, and transactions) compared to January and February </p>
 
