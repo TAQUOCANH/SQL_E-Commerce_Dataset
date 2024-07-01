@@ -199,8 +199,6 @@ FROM week_rev
 ORDER BY revenue DESC,source, time_type, time ;
 ```
 
-Dưới đây là dữ liệu đã được sắp xếp thành bảng:
-
 | time_type | time   | source                | revenue       |
 |-----------|--------|-----------------------|---------------|
 | Month     | 201706 | (direct)              | 97333.619695  |
